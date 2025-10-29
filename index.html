@@ -30,31 +30,16 @@
             font-family: 'Inter', sans-serif;
         }
 
-        /* ****************************************************** */
-        /* ESTILO DE SELECCIÓN DE PESTAÑA (RADIO BUTTONS) */
-        /* ****************************************************** */
-        
-        /* Oculta los inputs de radio pero los mantiene funcionales */
-        input[type="radio"] {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
+        /* Estilo para los menús desplegables (SELECT) */
+        .custom-select {
+            @apply w-full p-3 rounded-lg bg-secondary text-text-light border border-primary/50 appearance-none pr-10 cursor-pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2300BFFF'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd' /%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.5em 1.5em;
         }
-        
-        /* Estilo base para todas las etiquetas (las "pestañas") */
-        input[type="radio"] + label {
-            transition: all 0.2s ease;
-            /* Aplicamos estilos de pestaña/botón: centrado, bordes, hover */
-            @apply p-3 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card flex justify-center items-center h-full;
-            min-width: 100%; 
-            font-size: 0.875rem; /* text-sm */
-        }
-
-        /* ESTILO CUANDO LA PESTAÑA ESTÁ SELECCIONADA (CHECKED) */
-        input[type="radio"]:checked + label {
-            /* Aplica el anillo azul fuerte, fondo semitransparente y texto bold */
-            @apply ring-4 ring-primary bg-primary/20 text-text-light font-bold shadow-xl shadow-primary/20;
+        .custom-select:focus {
+            @apply ring-2 ring-primary border-primary;
         }
 
     </style>
@@ -72,79 +57,44 @@
         <!-- Formulario de Opciones -->
         <form id="promptForm" class="space-y-8">
             
-            <!-- PESTAÑA 1: TIPO DE FOTO -->
+            <!-- SECCIÓN 1: TIPO DE FOTO (SELECT) -->
             <section class="space-y-4 p-4 bg-card/50 rounded-xl">
-                <h2 class="text-xl font-bold text-text-light border-b border-primary/50 pb-2">1. Tipo de Foto</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <input type="radio" id="tipo-smartphone" name="tipoFoto" value="SMARTPHONE" class="hidden" checked>
-                    <label for="tipo-smartphone">
-                        Smartphone (Real)
-                    </label>
-
-                    <input type="radio" id="tipo-selfie" name="tipoFoto" value="SELFIE" class="hidden">
-                    <label for="tipo-selfie">
-                        Selfie con Smartphone
-                    </label>
-
-                    <input type="radio" id="tipo-editorial" name="tipoFoto" value="EDITORIAL" class="hidden">
-                    <label for="tipo-editorial">
-                        Editorial / Modas
-                    </label>
-                </div>
+                <label for="tipoFoto" class="block text-xl font-bold text-text-light border-b border-primary/50 pb-2">1. Tipo de Foto</label>
+                <select id="tipoFoto" class="custom-select" required>
+                    <option value="SMARTPHONE" selected>Smartphone (Real)</option>
+                    <option value="SELFIE">Selfie con Smartphone</option>
+                    <option value="EDITORIAL">Editorial / Modas</option>
+                </select>
             </section>
 
-            <!-- PESTAÑA 2: PERSONAJE -->
+            <!-- SECCIÓN 2: PERSONAJE (SELECT) -->
             <section class="space-y-4 p-4 bg-card/50 rounded-xl">
-                <h2 class="text-xl font-bold text-text-light border-b border-primary/50 pb-2">2. Personaje</h2>
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    <input type="radio" id="char-man" name="personaje" value="this man" class="hidden" checked>
-                    <label for="char-man">This man</label>
-                    
-                    <input type="radio" id="char-woman" name="personaje" value="this woman" class="hidden">
-                    <label for="char-woman">This woman</label>
-                    
-                    <input type="radio" id="char-young-man" name="personaje" value="this young man" class="hidden">
-                    <label for="char-young-man">This young man</label>
-                    
-                    <input type="radio" id="char-young-woman" name="personaje" value="this young woman" class="hidden">
-                    <label for="char-young-woman">This young woman</label>
-                    
-                    <input type="radio" id="char-old-man" name="personaje" value="this old man" class="hidden">
-                    <label for="char-old-man">This old man</label>
-
-                    <input type="radio" id="char-old-woman" name="personaje" value="this old woman" class="hidden">
-                    <label for="char-old-woman">This old woman</label>
-                </div>
+                <label for="personaje" class="block text-xl font-bold text-text-light border-b border-primary/50 pb-2">2. Personaje</label>
+                <select id="personaje" class="custom-select" required>
+                    <option value="this man" selected>This man</option>
+                    <option value="this woman">This woman</option>
+                    <option value="this young man">This young man</option>
+                    <option value="this young woman">This young woman</option>
+                    <option value="this old man">This old man</option>
+                    <option value="this old woman">This old woman</option>
+                </select>
             </section>
 
-            <!-- PESTAÑA 3: HORA DEL DÍA / ILUMINACIÓN -->
+            <!-- SECCIÓN 3: HORA DEL DÍA / ILUMINACIÓN (SELECT) -->
             <section class="space-y-4 p-4 bg-card/50 rounded-xl">
-                <h2 class="text-xl font-bold text-text-light border-b border-primary/50 pb-2">3. Iluminación / Ambiente</h2>
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    <input type="radio" id="luz-manana" name="luz" value="manana" class="hidden" checked>
-                    <label for="luz-manana">Mañana</label>
-                    
-                    <input type="radio" id="luz-tarde" name="luz" value="tarde" class="hidden">
-                    <label for="luz-tarde">Tarde</label>
-                    
-                    <input type="radio" id="luz-noche" name="luz" value="noche" class="hidden">
-                    <label for="luz-noche">Noche</label>
-                    
-                    <input type="radio" id="luz-amanecer" name="luz" value="amanecer" class="hidden">
-                    <label for="luz-amanecer">Amanecer (Sunrise)</label>
-                    
-                    <input type="radio" id="luz-atardecer" name="luz" value="atardecer" class="hidden">
-                    <label for="luz-atardecer">Atardecer (Sunset)</label>
-
-                    <input type="radio" id="luz-int-nat" name="luz" value="interior-natural" class="hidden">
-                    <label for="luz-int-nat">Interior (Natural)</label>
-                    
-                    <input type="radio" id="luz-int-art" name="luz" value="interior-artificial" class="hidden">
-                    <label for="luz-int-art">Interior (Artificial)</label>
-                </div>
+                <label for="luz" class="block text-xl font-bold text-text-light border-b border-primary/50 pb-2">3. Iluminación / Ambiente</label>
+                <select id="luz" class="custom-select" required>
+                    <option value="manana" selected>Mañana</option>
+                    <option value="tarde">Tarde</option>
+                    <option value="noche">Noche</option>
+                    <option value="amanecer">Amanecer (Sunrise)</option>
+                    <option value="atardecer">Atardecer (Sunset)</option>
+                    <option value="interior-natural">Interior (Natural)</option>
+                    <option value="interior-artificial">Interior (Artificial)</option>
+                </select>
             </section>
             
-            <!-- CAMPOS DE TEXTO LIBRE (OBLIGATORIOS) -->
+            <!-- SECCIÓN 4: CAMPOS DE TEXTO LIBRE (OBLIGATORIOS) -->
             <section class="space-y-4 p-4 bg-card/50 rounded-xl">
                 <h2 class="text-xl font-bold text-text-light border-b border-primary/50 pb-2">4. Detalles Obligatorios</h2>
                 
@@ -164,51 +114,33 @@
                 </div>
             </section>
             
-            <!-- OPCIONALES (ENCUADRE Y ÁNGULO - BOTONES DE RADIO) -->
+            <!-- SECCIÓN 5: OPCIONALES (ENCUADRE Y ÁNGULO - SELECTS) -->
             <section class="space-y-4 p-4 bg-card/50 rounded-xl">
                 <h2 class="text-xl font-bold text-text-light border-b border-primary/50 pb-2">5. Opciones Avanzadas (Opcional)</h2>
                 
-                <!-- Encuadre -->
-                <div class="space-y-2">
-                    <h3 class="text-lg font-medium text-text-light/90">Encuadre</h3>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        <!-- Opción por defecto (vacío) -->
-                        <input type="radio" id="encuadre-default" name="encuadre" value="" class="hidden" checked>
-                        <label for="encuadre-default">IA Decide</label>
-
-                        <input type="radio" id="encuadre-full" name="encuadre" value="Full shot" class="hidden">
-                        <label for="encuadre-full">Full shot (Completo)</label>
-                        
-                        <input type="radio" id="encuadre-medium" name="encuadre" value="Medium shot" class="hidden">
-                        <label for="encuadre-medium">Medium shot (Medio)</label>
-                        
-                        <input type="radio" id="encuadre-close" name="encuadre" value="Close up" class="hidden">
-                        <label for="encuadre-close">Close up (Rostro)</label>
-                        
-                        <input type="radio" id="encuadre-ultra-wide" name="encuadre" value="Ultra-wide shot" class="hidden">
-                        <label for="encuadre-ultra-wide">Ultra-wide (Escena)</label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Encuadre -->
+                    <div class="space-y-2">
+                        <label for="encuadre" class="text-lg font-medium text-text-light/90 block">Encuadre</label>
+                        <select id="encuadre" class="custom-select">
+                            <option value="" selected>IA Decide</option>
+                            <option value="Full shot">Full shot (Cuerpo completo)</option>
+                            <option value="Medium shot">Medium shot (Medio)</option>
+                            <option value="Close up">Close up (Rostro)</option>
+                            <option value="Ultra-wide shot">Ultra-wide (Escena)</option>
+                        </select>
                     </div>
-                </div>
 
-                <!-- Ángulo -->
-                <div class="space-y-2 pt-4">
-                    <h3 class="text-lg font-medium text-text-light/90">Ángulo</h3>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        <!-- Opción por defecto (vacío) -->
-                        <input type="radio" id="angulo-default" name="angulo" value="" class="hidden" checked>
-                        <label for="angulo-default">IA Decide</label>
-
-                        <input type="radio" id="angulo-high" name="angulo" value="high angle" class="hidden">
-                        <label for="angulo-high">High angle (Alto)</label>
-                        
-                        <input type="radio" id="angulo-low" name="angulo" value="low angle" class="hidden">
-                        <label for="angulo-low">Low angle (Bajo)</label>
-                        
-                        <input type="radio" id="angulo-eye" name="angulo" value="eye level" class="hidden">
-                        <label for="angulo-eye">Eye level (Ojos)</label>
-                        
-                        <input type="radio" id="angulo-dutch" name="angulo" value="dutch angle" class="hidden">
-                        <label for="angulo-dutch">Dutch angle (Inclinado)</label>
+                    <!-- Ángulo -->
+                    <div class="space-y-2">
+                        <label for="angulo" class="text-lg font-medium text-text-light/90 block">Ángulo</label>
+                        <select id="angulo" class="custom-select">
+                            <option value="" selected>IA Decide</option>
+                            <option value="high angle">High angle (Cámara alta)</option>
+                            <option value="low angle">Low angle (Cámara baja)</option>
+                            <option value="eye level">Eye level (Nivel de los ojos)</option>
+                            <option value="dutch angle">Dutch angle (Inclinado)</option>
+                        </select>
                     </div>
                 </div>
             </section>
@@ -240,7 +172,7 @@
             NITIDEZ: "**The sharpest photo ever taken by mankind.**",
             REALISMO_BASE: "hyper-detailed, realistic skin texture, 8k, **RAW unprocessed file look**",
 
-            // PESTAÑA 1: TIPO DE FOTO
+            // SECCIÓN 1: TIPO DE FOTO
             TIPOS: {
                 SMARTPHONE: {
                     CAMARA: "Vertical photo, Shot on Canon EOS R5 + Sigma 35mm f/1.4 lens, candid photography, slightly overexposed, slight grain,",
@@ -256,7 +188,7 @@
                 }
             },
 
-            // PESTAÑA 3: HORA DEL DÍA / ILUMINACIÓN
+            // SECCIÓN 3: HORA DEL DÍA / ILUMINACIÓN
             LUZ: {
                 manana: "soft, natural daylight, light and bright exposure.",
                 tarde: "warm, diffused light, perfect golden hour setting.",
@@ -277,30 +209,32 @@
         form.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // 1. Obtener valores del formulario
-            const tipoFoto = document.querySelector('input[name="tipoFoto"]:checked').value;
-            const personaje = document.querySelector('input[name="personaje"]:checked').value;
-            const luz = document.querySelector('input[name="luz"]:checked').value;
+            // 1. Obtener valores de los SELECTs
+            const tipoFoto = document.getElementById('tipoFoto').value;
+            const personaje = document.getElementById('personaje').value;
+            const luz = document.getElementById('luz').value;
             
+            // 2. Obtener valores de campos de texto
             const accionRopa = document.getElementById('accionRopa').value.trim();
             const locacionFondo = document.getElementById('locacionFondo').value.trim();
             const adicionales = document.getElementById('adicionales').value.trim();
 
-            const encuadre = document.querySelector('input[name="encuadre"]:checked').value;
-            const angulo = document.querySelector('input[name="angulo"]:checked').value;
+            // 3. Obtener valores de los SELECTs opcionales
+            const encuadre = document.getElementById('encuadre').value;
+            const angulo = document.getElementById('angulo').value;
 
-            // 2. Comprobar campos obligatorios
+            // 4. Comprobar campos obligatorios
             if (!accionRopa || !locacionFondo) {
                 // Usar un mensaje box en lugar de alert()
                 showUserMessage('Por favor, rellena los campos obligatorios de Acción/Vestimenta y Locación/Fondo.', 'red');
                 return;
             }
 
-            // 3. Obtener Tokens Fijos y Variables
+            // 5. Obtener Tokens Fijos y Variables
             const tipoTokens = TOKENS.TIPOS[tipoFoto];
             const luzToken = TOKENS.LUZ[luz];
             
-            // 4. Construir el Prompt
+            // 6. Construir el Prompt
             let promptParts = [];
 
             // INICIO: Nitidez y Tipo de Foto
@@ -336,7 +270,7 @@
             // Unir todas las partes en un solo string
             const finalPrompt = promptParts.filter(p => p.trim() !== '').join(', ');
 
-            // 5. Mostrar el resultado
+            // 7. Mostrar el resultado
             promptOutput.value = finalPrompt;
             outputContainer.classList.remove('hidden');
 
