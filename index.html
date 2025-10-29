@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PURE AI REALITY | Generador de Prompts V1.0</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#00BFFF', // Deep Sky Blue for accent
+                        'secondary': '#222831', // Dark background
+                        'card': '#393E46', // Slightly lighter card background
+                        'text-light': '#EEEEEE',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            background-color: #222831;
+            font-family: 'Inter', sans-serif;
+        }
+        /* Estilo para los botones de radio personalizados */
+        input[type="radio"]:checked + label {
+            @apply ring-4 ring-primary bg-primary/20 text-text-light font-bold;
+        }
+        input[type="radio"] + label {
+            transition: all 0.2s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 sm:p-8 flex items-center justify-center">
+
+    <div id="app" class="w-full max-w-2xl bg-secondary rounded-3xl shadow-2xl p-6 sm:p-8 space-y-8">
+        
+        <!-- HEADER / TÍTULO -->
+        <header class="text-center space-y-2">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-primary tracking-tight">PURE AI REALITY</h1>
+            <p class="text-text-light/80 text-lg">El Generador de Prompts con Calidad Fotográfica de Élite.</p>
+        </header>
+
+        <!-- Formulario de Opciones -->
+        <form id="promptForm" class="space-y-8">
+            
+            <!-- PESTAÑA 1: TIPO DE FOTO (SELECCIÓN PRINCIPAL) -->
+            <section class="space-y-4 p-4 bg-card/50 rounded-xl">
+                <h2 class="text-xl font-bold text-text-light border-b border-primary/50 pb-2">1. Tipo de Foto</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <input type="radio" id="tipo-smartphone" name="tipoFoto" value="SMARTPHONE" class="hidden" checked>
+                    <label for="tipo-smartphone" class="p-3 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">
+                        Smartphone (Real)
+                    </label>
+
+                    <input type="radio" id="tipo-selfie" name="tipoFoto" value="SELFIE" class="hidden">
+                    <label for="tipo-selfie" class="p-3 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">
+                        Selfie con Smartphone
+                    </label>
+
+                    <input type="radio" id="tipo-editorial" name="tipoFoto" value="EDITORIAL" class="hidden">
+                    <label for="tipo-editorial" class="p-3 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">
+                        Editorial / Modas
+                    </label>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 2: PERSONAJE -->
+            <section class="space-y-4 p-4 bg-card/50 rounded-xl">
+                <h2 class="text-xl font-bold text-text-light border-b border-primary/50 pb-2">2. Personaje</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <input type="radio" id="char-man" name="personaje" value="this man" class="hidden" checked>
+                    <label for="char-man" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">This man</label>
+                    
+                    <input type="radio" id="char-woman" name="personaje" value="this woman" class="hidden">
+                    <label for="char-woman" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">This woman</label>
+                    
+                    <input type="radio" id="char-young-man" name="personaje" value="this young man" class="hidden">
+                    <label for="char-young-man" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">This young man</label>
+                    
+                    <input type="radio" id="char-young-woman" name="personaje" value="this young woman" class="hidden">
+                    <label for="char-young-woman" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">This young woman</label>
+                    
+                    <input type="radio" id="char-old-man" name="personaje" value="this old man" class="hidden">
+                    <label for="char-old-man" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">This old man</label>
+
+                    <input type="radio" id="char-old-woman" name="personaje" value="this old woman" class="hidden">
+                    <label for="char-old-woman" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">This old woman</label>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 3: HORA DEL DÍA / ILUMINACIÓN -->
+            <section class="space-y-4 p-4 bg-card/50 rounded-xl">
+                <h2 class="text-xl font-bold text-text-light border-b border-primary/50 pb-2">3. Iluminación / Ambiente</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <input type="radio" id="luz-manana" name="luz" value="manana" class="hidden" checked>
+                    <label for="luz-manana" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">Mañana</label>
+                    
+                    <input type="radio" id="luz-tarde" name="luz" value="tarde" class="hidden">
+                    <label for="luz-tarde" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">Tarde</label>
+                    
+                    <input type="radio" id="luz-noche" name="luz" value="noche" class="hidden">
+                    <label for="luz-noche" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">Noche</label>
+                    
+                    <input type="radio" id="luz-amanecer" name="luz" value="amanecer" class="hidden">
+                    <label for="luz-amanecer" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">Amanecer (Sunrise)</label>
+                    
+                    <input type="radio" id="luz-atardecer" name="luz" value="atardecer" class="hidden">
+                    <label for="luz-atardecer" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">Atardecer (Sunset)</label>
+
+                    <input type="radio" id="luz-int-nat" name="luz" value="interior-natural" class="hidden">
+                    <label for="luz-int-nat" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">Interior (Natural)</label>
+                    
+                    <input type="radio" id="luz-int-art" name="luz" value="interior-artificial" class="hidden">
+                    <label for="luz-int-art" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">Interior (Artificial)</label>
+                </div>
+            </section>
+            
+            <!-- CAMPOS DE TEXTO LIBRE (OBLIGATORIOS) -->
+            <section class="space-y-4 p-4 bg-card/50 rounded-xl">
+                <h2 class="text-xl font-bold text-text-light border-b border-primary/50 pb-2">4. Detalles Obligatorios</h2>
+                
+                <div>
+                    <label for="accionRopa" class="block text-text-light/80 mb-1">Acción / Vestimenta</label>
+                    <textarea id="accionRopa" rows="2" placeholder="Ej: wearing a black jumpsuit, dancing on the beach" class="w-full p-3 rounded-lg bg-secondary text-text-light border border-primary/30 focus:ring-primary focus:border-primary outline-none" required></textarea>
+                </div>
+                
+                <div>
+                    <label for="locacionFondo" class="block text-text-light/80 mb-1">Locación / Fondo</label>
+                    <input type="text" id="locacionFondo" placeholder="Ej: inside a dimly lit abandoned urban house" class="w-full p-3 rounded-lg bg-secondary text-text-light border border-primary/30 focus:ring-primary focus:border-primary outline-none" required>
+                </div>
+                
+                <div>
+                    <label for="adicionales" class="block text-text-light/80 mb-1">Adicionales (Opcional)</label>
+                    <input type="text" id="adicionales" placeholder="Ej: dramatic expression, body proportions matching the model" class="w-full p-3 rounded-lg bg-secondary text-text-light border border-primary/30 focus:ring-primary focus:border-primary outline-none">
+                </div>
+            </section>
+            
+            <!-- OPCIONALES (ENCUADRE Y ÁNGULO) -->
+            <section class="space-y-4 p-4 bg-card/50 rounded-xl">
+                <h2 class="text-xl font-bold text-text-light border-b border-primary/50 pb-2">5. Opciones Avanzadas (Opcional)</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    
+                    <!-- Encuadre -->
+                    <div>
+                        <label for="encuadre" class="block text-text-light/80 mb-1">Encuadre</label>
+                        <select id="encuadre" class="w-full p-3 rounded-lg bg-secondary text-text-light border border-primary/30 outline-none">
+                            <option value="">(Dejar que la IA decida)</option>
+                            <option value="Full shot">Full shot (cuerpo completo)</option>
+                            <option value="Medium shot">Medium shot (cintura para arriba)</option>
+                            <option value="Close up">Close up (rostro/hombros)</option>
+                            <option value="Ultra-wide shot">Ultra-wide shot (gran escena)</option>
+                        </select>
+                    </div>
+
+                    <!-- Ángulo -->
+                    <div>
+                        <label for="angulo" class="block text-text-light/80 mb-1">Ángulo</label>
+                        <select id="angulo" class="w-full p-3 rounded-lg bg-secondary text-text-light border border-primary/30 outline-none">
+                            <option value="">(Dejar que la IA decida)</option>
+                            <option value="high angle">High angle (cámara alta)</option>
+                            <option value="low angle">Low angle (cámara baja)</option>
+                            <option value="dutch angle">Dutch angle (inclinado)</option>
+                            <option value="eye level">Eye level (a nivel de los ojos)</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BOTÓN GENERAR -->
+            <button type="submit" class="w-full py-4 text-xl font-bold text-secondary bg-primary rounded-xl shadow-lg hover:bg-primary/90 transition duration-200">
+                GENERAR PROMPT
+            </button>
+        </form>
+
+        <!-- OUTPUT -->
+        <div id="outputContainer" class="hidden space-y-4 pt-4 border-t border-primary/50">
+            <h2 class="text-xl font-bold text-text-light">Prompt Generado:</h2>
+            <div class="relative">
+                <textarea id="promptOutput" rows="5" class="w-full p-4 rounded-xl bg-card text-text-light text-base border-2 border-primary/70 resize-none" readonly></textarea>
+                <button id="copyButton" class="absolute right-3 bottom-3 p-2 bg-primary text-secondary rounded-lg text-sm font-semibold hover:bg-primary/90 transition duration-200">
+                    Copiar
+                </button>
+            </div>
+            <p id="copyMessage" class="text-sm text-green-400 text-center transition duration-500 opacity-0"></p>
+        </div>
+
+    </div>
+
+    <script>
+        // ARCHIVO DE TOKENS Y CHEAT CODES (BASE DE DATOS EN JS)
+        const TOKENS = {
+            // Tokens de Calidad Base (Se añaden SIEMPRE)
+            NITIDEZ: "**The sharpest photo ever taken by mankind.**",
+            REALISMO_BASE: "hyper-detailed, realistic skin texture, 8k, **RAW unprocessed file look**",
+
+            // PESTAÑA 1: TIPO DE FOTO
+            TIPOS: {
+                SMARTPHONE: {
+                    CAMARA: "Vertical photo, Shot on Canon EOS R5 + Sigma 35mm f/1.4 lens, candid photography, slightly overexposed, slight grain,",
+                    CALIDAD: "**Getty images aesthetic**, top-tier fashion magazine photoshoot quality, **candid outtake** feel."
+                },
+                SELFIE: {
+                    CAMARA: "Vertical smartphone mirror selfie, taken by, Shot on iPhone 15 Pro Max, .HEIC, IMG_1985.HEIC,",
+                    CALIDAD: "**Instagram export compression** quality, cinematic natural light, soft focus background."
+                },
+                EDITORIAL: {
+                    CAMARA: "**Vogue magazine editorial photoshoot**, Shot on Phase One IQ4 150MP + Zeiss Planar T\* 50mm f/0.7 lens, cinematic fashion photography,",
+                    CALIDAD: "**hasselblad award winning** quality, Strobe back splash + edge kicker, from Hasselblad Masters catalogue."
+                }
+            },
+
+            // PESTAÑA 3: HORA DEL DÍA / ILUMINACIÓN
+            LUZ: {
+                manana: "soft, natural daylight, light and bright exposure.",
+                tarde: "warm, diffused light, perfect golden hour setting.",
+                noche: "low-key lighting, deep black shadows, high contrast chiaroscuro, cinematic neon city glow.",
+                amanecer: "soft, ethereal gradient lighting, cinematic sunrise atmosphere, soft rim light.",
+                atardecer: "warm, cinematic sunset backlight, strong golden rim light, and subtle lens flare.",
+                'interior-natural': "warm, diffused natural daylight coming from a large window, high color fidelity, deep soft shadows.",
+                'interior-artificial': "high contrast studio lighting, focused light beams, cinematic smoke atmosphere.",
+            },
+
+            // PESTAÑA 2: PERSONAJE - (Los valores son directos del radio button: 'this man', 'this woman', etc.)
+            // OPCIONALES - (Los valores son directos de la selección: 'Full shot', 'high angle', etc.)
+        };
+
+        const form = document.getElementById('promptForm');
+        const outputContainer = document.getElementById('outputContainer');
+        const promptOutput = document.getElementById('promptOutput');
+        const copyButton = document.getElementById('copyButton');
+        const copyMessage = document.getElementById('copyMessage');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // 1. Obtener valores del formulario
+            const tipoFoto = document.querySelector('input[name="tipoFoto"]:checked').value;
+            const personaje = document.querySelector('input[name="personaje"]:checked').value;
+            const luz = document.querySelector('input[name="luz"]:checked').value;
+            
+            const accionRopa = document.getElementById('accionRopa').value.trim();
+            const locacionFondo = document.getElementById('locacionFondo').value.trim();
+            const adicionales = document.getElementById('adicionales').value.trim();
+
+            const encuadre = document.getElementById('encuadre').value;
+            const angulo = document.getElementById('angulo').value;
+
+            // 2. Comprobar campos obligatorios
+            if (!accionRopa || !locacionFondo) {
+                alert('Por favor, rellena los campos obligatorios de Acción/Vestimenta y Locación/Fondo.');
+                return;
+            }
+
+            // 3. Obtener Tokens Fijos y Variables
+            const tipoTokens = TOKENS.TIPOS[tipoFoto];
+            const luzToken = TOKENS.LUZ[luz];
+            
+            // 4. Construir el Prompt
+            let promptParts = [];
+
+            // INICIO: Nitidez y Tipo de Foto
+            promptParts.push(TOKENS.NITIDEZ);
+            promptParts.push(tipoTokens.CAMARA);
+            
+            // SUJETO + ACCIÓN/ROPA (Base del prompt)
+            promptParts.push(`${personaje}, ${accionRopa},`);
+            
+            // LOCACIÓN / FONDO
+            promptParts.push(locacionFondo);
+            
+            // ILUMINACIÓN
+            promptParts.push(`**${luzToken}**`);
+
+            // OPCIONALES
+            if (encuadre) {
+                promptParts.push(encuadre);
+            }
+            if (angulo) {
+                promptParts.push(angulo);
+            }
+            
+            // ADICIONALES (Texto libre opcional)
+            if (adicionales) {
+                promptParts.push(adicionales);
+            }
+            
+            // FINAL: Calidad, Realismo y Cheat Codes
+            promptParts.push(tipoTokens.CALIDAD);
+            promptParts.push(TOKENS.REALISMO_BASE);
+
+            // Unir todas las partes en un solo string
+            const finalPrompt = promptParts.filter(p => p.trim() !== '').join(', ');
+
+            // 5. Mostrar el resultado
+            promptOutput.value = finalPrompt;
+            outputContainer.classList.remove('hidden');
+
+            // Scroll hacia el output
+            outputContainer.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Lógica del botón Copiar
+        copyButton.addEventListener('click', function() {
+            promptOutput.select();
+            // Use document.execCommand('copy') for better iframe compatibility
+            document.execCommand('copy');
+            
+            // Mensaje de confirmación
+            copyMessage.textContent = "¡Copiado al portapapeles!";
+            copyMessage.classList.remove('opacity-0');
+            copyMessage.classList.add('opacity-100');
+
+            setTimeout(() => {
+                copyMessage.classList.remove('opacity-100');
+                copyMessage.classList.add('opacity-0');
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
