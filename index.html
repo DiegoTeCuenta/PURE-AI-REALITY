@@ -29,13 +29,34 @@
             background-color: #222831;
             font-family: 'Inter', sans-serif;
         }
-        /* Estilo para los botones de radio personalizados */
-        input[type="radio"]:checked + label {
-            @apply ring-4 ring-primary bg-primary/20 text-text-light font-bold;
+
+        /* ****************************************************** */
+        /* ESTILO DE SELECCIÓN DE PESTAÑA (RADIO BUTTONS) */
+        /* ****************************************************** */
+        
+        /* Oculta los inputs de radio pero los mantiene funcionales */
+        input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
         }
+        
+        /* Estilo base para todas las etiquetas (las "pestañas") */
         input[type="radio"] + label {
             transition: all 0.2s ease;
+            /* Aplicamos estilos de pestaña/botón: centrado, bordes, hover */
+            @apply p-3 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card flex justify-center items-center h-full;
+            min-width: 100%; 
+            font-size: 0.875rem; /* text-sm */
         }
+
+        /* ESTILO CUANDO LA PESTAÑA ESTÁ SELECCIONADA (CHECKED) */
+        input[type="radio"]:checked + label {
+            /* Aplica el anillo azul fuerte, fondo semitransparente y texto bold */
+            @apply ring-4 ring-primary bg-primary/20 text-text-light font-bold shadow-xl shadow-primary/20;
+        }
+
     </style>
 </head>
 <body class="min-h-screen p-4 sm:p-8 flex items-center justify-center">
@@ -51,22 +72,22 @@
         <!-- Formulario de Opciones -->
         <form id="promptForm" class="space-y-8">
             
-            <!-- PESTAÑA 1: TIPO DE FOTO (SELECCIÓN PRINCIPAL) -->
+            <!-- PESTAÑA 1: TIPO DE FOTO -->
             <section class="space-y-4 p-4 bg-card/50 rounded-xl">
                 <h2 class="text-xl font-bold text-text-light border-b border-primary/50 pb-2">1. Tipo de Foto</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <input type="radio" id="tipo-smartphone" name="tipoFoto" value="SMARTPHONE" class="hidden" checked>
-                    <label for="tipo-smartphone" class="p-3 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">
+                    <label for="tipo-smartphone">
                         Smartphone (Real)
                     </label>
 
                     <input type="radio" id="tipo-selfie" name="tipoFoto" value="SELFIE" class="hidden">
-                    <label for="tipo-selfie" class="p-3 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">
+                    <label for="tipo-selfie">
                         Selfie con Smartphone
                     </label>
 
                     <input type="radio" id="tipo-editorial" name="tipoFoto" value="EDITORIAL" class="hidden">
-                    <label for="tipo-editorial" class="p-3 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">
+                    <label for="tipo-editorial">
                         Editorial / Modas
                     </label>
                 </div>
@@ -77,22 +98,22 @@
                 <h2 class="text-xl font-bold text-text-light border-b border-primary/50 pb-2">2. Personaje</h2>
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     <input type="radio" id="char-man" name="personaje" value="this man" class="hidden" checked>
-                    <label for="char-man" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">This man</label>
+                    <label for="char-man">This man</label>
                     
                     <input type="radio" id="char-woman" name="personaje" value="this woman" class="hidden">
-                    <label for="char-woman" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">This woman</label>
+                    <label for="char-woman">This woman</label>
                     
                     <input type="radio" id="char-young-man" name="personaje" value="this young man" class="hidden">
-                    <label for="char-young-man" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">This young man</label>
+                    <label for="char-young-man">This young man</label>
                     
                     <input type="radio" id="char-young-woman" name="personaje" value="this young woman" class="hidden">
-                    <label for="char-young-woman" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">This young woman</label>
+                    <label for="char-young-woman">This young woman</label>
                     
                     <input type="radio" id="char-old-man" name="personaje" value="this old man" class="hidden">
-                    <label for="char-old-man" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">This old man</label>
+                    <label for="char-old-man">This old man</label>
 
                     <input type="radio" id="char-old-woman" name="personaje" value="this old woman" class="hidden">
-                    <label for="char-old-woman" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">This old woman</label>
+                    <label for="char-old-woman">This old woman</label>
                 </div>
             </section>
 
@@ -101,25 +122,25 @@
                 <h2 class="text-xl font-bold text-text-light border-b border-primary/50 pb-2">3. Iluminación / Ambiente</h2>
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     <input type="radio" id="luz-manana" name="luz" value="manana" class="hidden" checked>
-                    <label for="luz-manana" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">Mañana</label>
+                    <label for="luz-manana">Mañana</label>
                     
                     <input type="radio" id="luz-tarde" name="luz" value="tarde" class="hidden">
-                    <label for="luz-tarde" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">Tarde</label>
+                    <label for="luz-tarde">Tarde</label>
                     
                     <input type="radio" id="luz-noche" name="luz" value="noche" class="hidden">
-                    <label for="luz-noche" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">Noche</label>
+                    <label for="luz-noche">Noche</label>
                     
                     <input type="radio" id="luz-amanecer" name="luz" value="amanecer" class="hidden">
-                    <label for="luz-amanecer" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">Amanecer (Sunrise)</label>
+                    <label for="luz-amanecer">Amanecer (Sunrise)</label>
                     
                     <input type="radio" id="luz-atardecer" name="luz" value="atardecer" class="hidden">
-                    <label for="luz-atardecer" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">Atardecer (Sunset)</label>
+                    <label for="luz-atardecer">Atardecer (Sunset)</label>
 
                     <input type="radio" id="luz-int-nat" name="luz" value="interior-natural" class="hidden">
-                    <label for="luz-int-nat" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">Interior (Natural)</label>
+                    <label for="luz-int-nat">Interior (Natural)</label>
                     
                     <input type="radio" id="luz-int-art" name="luz" value="interior-artificial" class="hidden">
-                    <label for="luz-int-art" class="p-2 text-center rounded-lg border-2 border-primary/50 cursor-pointer text-text-light/70 hover:bg-card">Interior (Artificial)</label>
+                    <label for="luz-int-art">Interior (Artificial)</label>
                 </div>
             </section>
             
@@ -143,33 +164,51 @@
                 </div>
             </section>
             
-            <!-- OPCIONALES (ENCUADRE Y ÁNGULO) -->
+            <!-- OPCIONALES (ENCUADRE Y ÁNGULO - BOTONES DE RADIO) -->
             <section class="space-y-4 p-4 bg-card/50 rounded-xl">
                 <h2 class="text-xl font-bold text-text-light border-b border-primary/50 pb-2">5. Opciones Avanzadas (Opcional)</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    
-                    <!-- Encuadre -->
-                    <div>
-                        <label for="encuadre" class="block text-text-light/80 mb-1">Encuadre</label>
-                        <select id="encuadre" class="w-full p-3 rounded-lg bg-secondary text-text-light border border-primary/30 outline-none">
-                            <option value="">(Dejar que la IA decida)</option>
-                            <option value="Full shot">Full shot (cuerpo completo)</option>
-                            <option value="Medium shot">Medium shot (cintura para arriba)</option>
-                            <option value="Close up">Close up (rostro/hombros)</option>
-                            <option value="Ultra-wide shot">Ultra-wide shot (gran escena)</option>
-                        </select>
-                    </div>
+                
+                <!-- Encuadre -->
+                <div class="space-y-2">
+                    <h3 class="text-lg font-medium text-text-light/90">Encuadre</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <!-- Opción por defecto (vacío) -->
+                        <input type="radio" id="encuadre-default" name="encuadre" value="" class="hidden" checked>
+                        <label for="encuadre-default">IA Decide</label>
 
-                    <!-- Ángulo -->
-                    <div>
-                        <label for="angulo" class="block text-text-light/80 mb-1">Ángulo</label>
-                        <select id="angulo" class="w-full p-3 rounded-lg bg-secondary text-text-light border border-primary/30 outline-none">
-                            <option value="">(Dejar que la IA decida)</option>
-                            <option value="high angle">High angle (cámara alta)</option>
-                            <option value="low angle">Low angle (cámara baja)</option>
-                            <option value="dutch angle">Dutch angle (inclinado)</option>
-                            <option value="eye level">Eye level (a nivel de los ojos)</option>
-                        </select>
+                        <input type="radio" id="encuadre-full" name="encuadre" value="Full shot" class="hidden">
+                        <label for="encuadre-full">Full shot (Completo)</label>
+                        
+                        <input type="radio" id="encuadre-medium" name="encuadre" value="Medium shot" class="hidden">
+                        <label for="encuadre-medium">Medium shot (Medio)</label>
+                        
+                        <input type="radio" id="encuadre-close" name="encuadre" value="Close up" class="hidden">
+                        <label for="encuadre-close">Close up (Rostro)</label>
+                        
+                        <input type="radio" id="encuadre-ultra-wide" name="encuadre" value="Ultra-wide shot" class="hidden">
+                        <label for="encuadre-ultra-wide">Ultra-wide (Escena)</label>
+                    </div>
+                </div>
+
+                <!-- Ángulo -->
+                <div class="space-y-2 pt-4">
+                    <h3 class="text-lg font-medium text-text-light/90">Ángulo</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <!-- Opción por defecto (vacío) -->
+                        <input type="radio" id="angulo-default" name="angulo" value="" class="hidden" checked>
+                        <label for="angulo-default">IA Decide</label>
+
+                        <input type="radio" id="angulo-high" name="angulo" value="high angle" class="hidden">
+                        <label for="angulo-high">High angle (Alto)</label>
+                        
+                        <input type="radio" id="angulo-low" name="angulo" value="low angle" class="hidden">
+                        <label for="angulo-low">Low angle (Bajo)</label>
+                        
+                        <input type="radio" id="angulo-eye" name="angulo" value="eye level" class="hidden">
+                        <label for="angulo-eye">Eye level (Ojos)</label>
+                        
+                        <input type="radio" id="angulo-dutch" name="angulo" value="dutch angle" class="hidden">
+                        <label for="angulo-dutch">Dutch angle (Inclinado)</label>
                     </div>
                 </div>
             </section>
@@ -227,9 +266,6 @@
                 'interior-natural': "warm, diffused natural daylight coming from a large window, high color fidelity, deep soft shadows.",
                 'interior-artificial': "high contrast studio lighting, focused light beams, cinematic smoke atmosphere.",
             },
-
-            // PESTAÑA 2: PERSONAJE - (Los valores son directos del radio button: 'this man', 'this woman', etc.)
-            // OPCIONALES - (Los valores son directos de la selección: 'Full shot', 'high angle', etc.)
         };
 
         const form = document.getElementById('promptForm');
@@ -250,12 +286,13 @@
             const locacionFondo = document.getElementById('locacionFondo').value.trim();
             const adicionales = document.getElementById('adicionales').value.trim();
 
-            const encuadre = document.getElementById('encuadre').value;
-            const angulo = document.getElementById('angulo').value;
+            const encuadre = document.querySelector('input[name="encuadre"]:checked').value;
+            const angulo = document.querySelector('input[name="angulo"]:checked').value;
 
             // 2. Comprobar campos obligatorios
             if (!accionRopa || !locacionFondo) {
-                alert('Por favor, rellena los campos obligatorios de Acción/Vestimenta y Locación/Fondo.');
+                // Usar un mensaje box en lugar de alert()
+                showUserMessage('Por favor, rellena los campos obligatorios de Acción/Vestimenta y Locación/Fondo.', 'red');
                 return;
             }
 
@@ -307,6 +344,18 @@
             outputContainer.scrollIntoView({ behavior: 'smooth' });
         });
 
+        // Función para mostrar mensajes de usuario (reemplazo de alert)
+        function showUserMessage(message, color) {
+            copyMessage.textContent = message;
+            copyMessage.classList.remove('opacity-0', 'text-green-400', 'text-red-400');
+            copyMessage.classList.add('opacity-100', `text-${color}-400`);
+
+            setTimeout(() => {
+                copyMessage.classList.remove('opacity-100');
+                copyMessage.classList.add('opacity-0');
+            }, 3000);
+        }
+
         // Lógica del botón Copiar
         copyButton.addEventListener('click', function() {
             promptOutput.select();
@@ -314,14 +363,7 @@
             document.execCommand('copy');
             
             // Mensaje de confirmación
-            copyMessage.textContent = "¡Copiado al portapapeles!";
-            copyMessage.classList.remove('opacity-0');
-            copyMessage.classList.add('opacity-100');
-
-            setTimeout(() => {
-                copyMessage.classList.remove('opacity-100');
-                copyMessage.classList.add('opacity-0');
-            }, 2000);
+            showUserMessage("¡Prompt copiado al portapapeles!", 'green');
         });
     </script>
 </body>
