@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Tools para Creadores · 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bricolage+Grotesque:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08080a;
+  --s1:#0f0f12;
+  --s2:#16161a;
+  --s3:#1e1e24;
+  --border:rgba(255,255,255,0.06);
+  --border2:rgba(255,255,255,0.12);
+  --text:#e8e4dc;
+  --muted:#666;
+  --muted2:#999;
+  --yellow:#f5e642;
+  --cyan:#42d4f5;
+  --pink:#f542a8;
+  --green:#42f5a8;
+  --orange:#f5a042;
+  --head:'Bricolage Grotesque',sans-serif;
+  --mono:'Space Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--head);font-size:15px;line-height:1.7;min-height:100vh;overflow-x:hidden}
+
+/* NOISE OVERLAY */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4}
+
+/* HERO */
+.hero{position:relative;padding:80px 32px 60px;max-width:960px;margin:0 auto;z-index:1}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--yellow);margin-bottom:24px;opacity:0;animation:fadeUp .5s .1s forwards}
+.hero h1{font-size:clamp(48px,8vw,88px);font-weight:800;line-height:.95;letter-spacing:-.04em;margin-bottom:28px;opacity:0;animation:fadeUp .6s .2s forwards}
+.hero h1 .line1{display:block;color:var(--text)}
+.hero h1 .line2{display:block;color:var(--yellow);-webkit-text-stroke:0px}
+.hero h1 .line3{display:block;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,0.2)}
+.hero-desc{font-size:16px;font-weight:300;color:var(--muted2);max-width:500px;opacity:0;animation:fadeUp .6s .35s forwards;line-height:1.6}
+.hero-line{width:40px;height:3px;background:var(--yellow);margin:36px 0;opacity:0;animation:fadeUp .5s .45s forwards}
+
+/* GRID DE STATS */
+.stats-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:0;position:relative;z-index:1;opacity:0;animation:fadeUp .6s .55s forwards}
+.stat{padding:24px 28px;border-right:1px solid var(--border);text-align:left}
+.stat:last-child{border-right:none}
+.stat-n{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--yellow);line-height:1;margin-bottom:4px}
+.stat-l{font-size:11px;color:var(--muted);letter-spacing:.05em}
+
+/* WRAPPER */
+.wrap{max-width:960px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
+
+/* SECTION */
+.sec{padding:72px 0 0}
+.sec-tag{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.sec h2{font-size:clamp(28px,4vw,42px);font-weight:800;line-height:1.1;letter-spacing:-.03em;margin-bottom:6px}
+.sec h2 em{font-style:normal;color:var(--yellow)}
+.sec-intro{font-size:14px;color:var(--muted2);margin-bottom:36px;max-width:560px;font-weight:300}
+hr.divider{border:none;border-top:1px solid var(--border);margin:72px 0 0;position:relative;z-index:1}
+
+/* CATEGORY TABS */
+.tabs{display:flex;gap:4px;margin-bottom:28px;flex-wrap:wrap}
+.tab{font-family:var(--mono);font-size:11px;padding:6px 14px;border:1px solid var(--border2);border-radius:4px;cursor:pointer;color:var(--muted2);transition:all .15s;background:transparent;letter-spacing:.05em}
+.tab:hover,.tab.active{background:var(--yellow);color:#000;border-color:var(--yellow)}
+
+/* TOOL CARDS */
+.tools-grid{display:flex;flex-direction:column;gap:8px}
+.tool-card{background:var(--s1);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .15s;cursor:pointer}
+.tool-card:hover{border-color:var(--border2)}
+.tool-card.open{border-color:rgba(245,230,66,.25)}
+.tool-head{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:16px;padding:18px 20px}
+.tool-icon{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ic-y{background:rgba(245,230,66,.1)}
+.ic-c{background:rgba(66,212,245,.1)}
+.ic-p{background:rgba(245,66,168,.1)}
+.ic-g{background:rgba(66,245,168,.1)}
+.ic-o{background:rgba(245,160,66,.1)}
+.tool-info{min-width:0}
+.tool-name{font-size:15px;font-weight:600;color:var(--text);margin-bottom:2px}
+.tool-tagline{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tool-badges{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.tbadge{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:3px;white-space:nowrap}
+.b-free{background:rgba(66,245,168,.1);color:var(--green)}
+.b-paid{background:rgba(245,160,66,.1);color:var(--orange)}
+.b-open{background:rgba(66,212,245,.1);color:var(--cyan)}
+.b-hot{background:rgba(245,66,168,.1);color:var(--pink)}
+.b-cloud{background:rgba(245,230,66,.1);color:var(--yellow)}
+.chevron-btn{color:var(--muted);font-size:16px;transition:transform .2s;flex-shrink:0}
+.tool-card.open .chevron-btn{transform:rotate(180deg)}
+.tool-body{display:none;padding:0 20px 20px;border-top:1px solid var(--border)}
+.tool-card.open .tool-body{display:block}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:16px 0}
+.tstat{background:var(--s2);border-radius:8px;padding:10px 12px}
+.tstat-l{font-size:10px;color:var(--muted);margin-bottom:3px;font-family:var(--mono)}
+.tstat-v{font-size:14px;font-weight:600;color:var(--text)}
+.tool-verdict{font-size:13px;color:var(--muted2);line-height:1.6;margin:12px 0}
+.tool-verdict strong{color:var(--text);font-weight:500}
+.pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.pc-box{background:var(--s2);border-radius:8px;padding:12px 14px}
+.pc-title{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.pc-title.pros{color:var(--green)}
+.pc-title.cons{color:var(--pink)}
+.pc-list{list-style:none}
+.pc-list li{font-size:12px;color:var(--muted2);padding:3px 0;padding-left:14px;position:relative;line-height:1.4}
+.pc-list.pros-l li::before{content:'✓';position:absolute;left:0;color:var(--green);font-size:11px}
+.pc-list.cons-l li::before{content:'×';position:absolute;left:0;color:var(--pink);font-size:11px}
+
+/* WORKFLOW MAP */
+.workflow{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:28px;margin-top:8px}
+.wf-title{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.wf-chain{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.wf-step{background:var(--s3);border:1px solid var(--border2);border-radius:8px;padding:10px 14px;font-size:12px;text-align:center}
+.wf-step-title{font-weight:600;color:var(--text);margin-bottom:2px}
+.wf-step-tool{font-family:var(--mono);font-size:10px;color:var(--yellow)}
+.wf-arrow{color:var(--muted);font-size:18px;flex-shrink:0}
+.wf-note{font-size:12px;color:var(--muted2);line-height:1.5}
+.wf-note strong{color:var(--text);font-weight:500}
+
+/* RUNPOD SECTION */
+.runpod-box{background:linear-gradient(135deg,rgba(66,212,245,.04),rgba(66,212,245,.01));border:1px solid rgba(66,212,245,.15);border-radius:12px;padding:28px;position:relative;overflow:hidden}
+.runpod-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),transparent)}
+.runpod-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:16px}
+.rp-card{background:var(--s2);border-radius:8px;padding:14px 16px}
+.rp-card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.rp-card-note{font-size:12px;color:var(--muted2);line-height:1.5}
+.rp-price{font-family:var(--mono);font-size:16px;color:var(--cyan);margin-top:8px}
+
+/* RECOMMENDATION BOX */
+.rec-box{background:var(--s1);border-left:3px solid var(--yellow);padding:20px 24px;margin-top:8px;border-radius:0 8px 8px 0}
+.rec-box p{font-size:13.5px;color:var(--muted2);line-height:1.65}
+.rec-box strong{color:var(--text);font-weight:500}
+.rec-box .rec-title{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);margin-bottom:10px}
+
+/* COMPARISON TABLE */
+.comp-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12px}
+.comp-table th{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
+.comp-table td{padding:12px 12px;border-bottom:1px solid var(--border);color:var(--muted2);vertical-align:top}
+.comp-table tr:last-child td{border-bottom:none}
+.comp-table .tool-col{font-weight:600;color:var(--text);font-size:13px}
+.comp-table tr:hover td{background:var(--s1)}
+.rating{display:flex;gap:2px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--border2)}
+.dot.fill{background:var(--yellow)}
+
+/* FOOTER */
+.footer{text-align:center;padding:60px 32px 40px;font-family:var(--mono);font-size:11px;color:var(--muted);position:relative;z-index:1;border-top:1px solid var(--border);margin-top:72px}
+
+/* CATEGORY FILTER */
+.cat-section{display:none}
+.cat-section.active{display:block}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .5s,transform .5s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Investigación · Mayo 2026 · Para creadores de AI Influencers</div>
+  <h1>
+    <span class="line1">Herramientas</span>
+    <span class="line2">de IA Visual</span>
+    <span class="line3">2026 · Real Talk</span>
+  </h1>
+  <p class="hero-desc">El panorama completo de imagen y video IA para creadores de contenido — sin hype, con precios reales y recomendaciones honestas.</p>
+  <div class="hero-line"></div>
+</div>
+
+<div class="stats-strip">
+  <div class="stat"><div class="stat-n">FLUX.2</div><div class="stat-l">Rey del open source en imagen</div></div>
+  <div class="stat"><div class="stat-n">#1</div><div class="stat-l">Kling 3.0 en benchmarks de video</div></div>
+  <div class="stat"><div class="stat-n">$6.99</div><div class="stat-l">Kling Standard / mes con derechos comerciales</div></div>
+  <div class="stat"><div class="stat-n">Gratis</div><div class="stat-l">Wan 2.2 open source en RunPod</div></div>
+  <div class="stat"><div class="stat-n">$0</div><div class="stat-l">Higgsfield tiene tier gratuito real</div></div>
+</div>
+
+<div class="wrap">
+
+  <!-- IMAGEN -->
+  <div class="sec reveal">
+    <p class="sec-tag">01 · Generación de Imagen</p>
+    <h2>El rey sigue siendo <em>FLUX</em></h2>
+    <p class="sec-intro">SD 1.5 y SDXL quedan atrás. El ecosistema se movió. Esto es lo que hay ahora y qué hacer con un M1 + presupuesto ajustado.</p>
+
+    <div class="tools-grid">
+
+      <!-- Nano Banana -->
+      <div class="tool-card open" onclick="toggle(this)">
+        <div class="tool-head">
+          <div class="tool-icon ic-y">🍌</div>
+          <div class="tool-info">
+            <div class="tool-name">Nano Banana (Google Imagen)</div>
+            <div class="tool-tagline">Tu herramienta actual · la mejor textura fotorrealista del mercado cloud</div>
+          </div>
+          <div class="tool-badges">
+            <span class="tbadge b-cloud">Cloud</span>
+            <span class="tbadge b-paid">API de pago</span>
+          </div>
+          <span class="chevron-btn">▾</span>
+        </div>
+        <div class="tool-body">
+          <div class="tool-grid">
+            <div class="tstat"><div class="tstat-l">Calidad piel</div><div class="tstat-v">⭐⭐⭐⭐⭐</div></div>
+            <div class="tstat"><div class="tstat-l">Costo</div><div class="tstat-v">Medio-alto</div></div>
+            <div class="tstat"><div class="tstat-l">Censura</div><div class="tstat-v">Moderada</div></div>
+            <div class="tstat"><div class="tstat-l">M1 compatible</div><div class="tstat-v">Sí (cloud)</div></div>
+          </div>
+          <p class="tool-verdict">Es Google Imagen bajo otro nombre. La textura de piel es la mejor que existe en formato cloud — por eso la sigues usando. El problema: los filtros de contenido son inconsistentes y la API puede rechazar sin aviso. <strong>Mantenerla como herramienta principal de fotos.</strong></p>
+          <div class="pros-cons">
+            <div class="pc-box">
+              <div class="pc-title pros">PROS</div>
+              <ul class="pc-list pros-l">
+                <li>Mejor fotorrealismo de piel</li>
+                <li>Consistencia entre generaciones</li>
+                <li>Fácil de usar con prompts naturales</li>
+                <li>4K disponible</li>
+              </ul>
+            </div>
+            <div class="pc-box">
+              <div class="pc-title cons">CONTRAS</div>
+              <ul class="pc-list cons-l">
+                <li>Costo por imagen se acumula</li>
+                <li>Filtros impredecibles</li>
+                <li>Dependencia de Google</li>
+                <li>Sin control de modelo</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FLUX.2 -->
+      <div class="tool-card" onclick="toggle(this)">
+        <div class="tool-head">
+          <div class="tool-icon ic-c">⚡</div>
+          <div class="tool-info">
+            <div class="tool-name">FLUX.2 (Black Forest Labs)</div>
+            <div class="tool-tagline">El mejor open source fotorrealista · sucesor claro de SD y SDXL</div>
+          </div>
+          <div class="tool-badges">
+            <span class="tbadge b-open">Open Weights</span>
+            <span class="tbadge b-hot">Top 2026</span>
+          </div>
+          <span class="chevron-btn">▾</span>
+        </div>
+        <div class="tool-body">
+          <div class="tool-grid">
+            <div class="tstat"><div class="tstat-l">Calidad</div><div class="tstat-v">⭐⭐⭐⭐⭐</div></div>
+            <div class="tstat"><div class="tstat-l">Resolución</div><div class="tstat-v">Hasta 4MP nativo</div></div>
+            <div class="tstat"><div class="tstat-l">M1 local</div><div class="tstat-v">Muy lento</div></div>
+            <div class="tstat"><div class="tstat-l">RunPod</div><div class="tstat-v">Ideal</div></div>
+          </div>
+          <p class="tool-verdict">El salto de SDXL a FLUX es tan grande como el salto de SD 1.5 a SDXL. Mejor anatomía, mejor piel, mejor seguimiento de prompts. <strong>FLUX.2 [dev] es el modelo que debes correr en RunPod</strong> cuando necesitas volumen o control fino. FLUX.1 Kontext permite edición de imagen con múltiples referencias — perfecto para consistencia de personaje.</p>
+          <div class="pros-cons">
+            <div class="pc-box">
+              <div class="pc-title pros">PROS</div>
+              <ul class="pc-list pros-l">
+                <li>Calidad fotorrealista de primer nivel</li>
+                <li>Multi-reference support nativo</li>
+                <li>Enorme ecosistema de LoRAs</li>
+                <li>ComfyUI ready</li>
+                <li>FLUX Kontext para edición</li>
+              </ul>
+            </div>
+            <div class="pc-box">
+              <div class="pc-title cons">CONTRAS</div>
+              <ul class="pc-list cons-l">
+                <li>Pesado para M1 básico</li>
+                <li>Dev: licencia no comercial directa</li>
+                <li>Requiere RunPod o cloud</li>
+                <li>Más lento que Nano en cloud</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mage / Mango -->
+      <div class="tool-card" onclick="toggle(this)">
+        <div class="tool-head">
+          <div class="tool-icon ic-p">🥭</div>
+          <div class="tool-info">
+            <div class="tool-name">Mage.space · Mango 2</div>
+            <div class="tool-tagline">El más permisivo para AI influencers · character consistency + contenido adulto legal</div>
+          </div>
+          <div class="tool-badges">
+            <span class="tbadge b-paid">$30–200/mes</span>
+            <span class="tbadge b-hot">Recomendado</span>
+          </div>
+          <span class="chevron-btn">▾</span>
+        </div>
+        <div class="tool-body">
+          <div class="tool-grid">
+            <div class="tstat"><div class="tstat-l">Permisividad</div><div class="tstat-v">Alta (legal)</div></div>
+            <div class="tstat"><div class="tstat-l">Consistencia</div><div class="tstat-v">Muy alta</div></div>
+            <div class="tstat"><div class="tstat-l">Plan base</div><div class="tstat-v">$30/mes</div></div>
+            <div class="tstat"><div class="tstat-l">M1 compatible</div><div class="tstat-v">Sí (cloud)</div></div>
+          </div>
+          <p class="tool-verdict"><strong>El reemplazo más directo de Grok para tu workflow.</strong> Mango 2 es exclusivo de Mage, entrenado específicamente para glamour fotorrealista y AI influencer content. Tiene "Characters" — subes una referencia y Paula mantiene identidad entre generaciones. Sin subscription de Grok, esto es lo más cercano en permisividad + calidad.</p>
+          <div class="pros-cons">
+            <div class="pc-box">
+              <div class="pc-title pros">PROS</div>
+              <ul class="pc-list pros-l">
+                <li>Diseñado para AI influencer</li>
+                <li>Character consistency real</li>
+                <li>Contenido maduro permitido</li>
+                <li>Generaciones ilimitadas en Pro+</li>
+                <li>Cloud, sin GPU propia</li>
+              </ul>
+            </div>
+            <div class="pc-box">
+              <div class="pc-title cons">CONTRAS</div>
+              <ul class="pc-list cons-l">
+                <li>Mango solo en Mage (exclusivo)</li>
+                <li>$30/mes mínimo para lo útil</li>
+                <li>Calidad ligeramente bajo Nano</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SD 3.5 -->
+      <div class="tool-card" onclick="toggle(this)">
+        <div class="tool-head">
+          <div class="tool-icon ic-g">🔷</div>
+          <div class="tool-info">
+            <div class="tool-name">Stable Diffusion 3.5 + Forge</div>
+            <div class="tool-tagline">El ecosistema más grande de LoRAs · tu base técnica de años sigue valiendo</div>
+          </div>
+          <div class="tool-badges">
+            <span class="tbadge b-open">Open Source</span>
+            <span class="tbadge b-free">Gratis</span>
+          </div>
+          <span class="chevron-btn">▾</span>
+        </div>
+        <div class="tool-body">
+          <div class="tool-grid">
+            <div class="tstat"><div class="tstat-l">Calidad vs FLUX</div><div class="tstat-v">Menor</div></div>
+            <div class="tstat"><div class="tstat-l">Ecosistema LoRA</div><div class="tstat-v">Enorme</div></div>
+            <div class="tstat"><div class="tstat-l">M1 básico</div><div class="tstat-v">Muy lento</div></div>
+            <div class="tstat"><div class="tstat-l">RunPod</div><div class="tstat-v">Barato</div></div>
+          </div>
+          <p class="tool-verdict">Tu experiencia con SDXL y A1111 se traslada directo. SD 3.5 Large con WebUI Forge es el camino de menor fricción desde lo que ya conoces. La calidad no iguala FLUX pero el ecosistema de LoRAs especializados (incluyendo LoRAs de personajes específicos) es incomparable. <strong>Útil para experimentación económica en RunPod.</strong></p>
+          <div class="pros-cons">
+            <div class="pc-box">
+              <div class="pc-title pros">PROS</div>
+              <ul class="pc-list pros-l">
+                <li>Curva de aprendizaje mínima</li>
+                <li>Miles de LoRAs disponibles</li>
+                <li>Forge: interfaz familiar a A1111</li>
+                <li>Gratis y open source</li>
+              </ul>
+            </div>
+            <div class="pc-box">
+              <div class="pc-title cons">CONTRAS</div>
+              <ul class="pc-list cons-l">
+                <li>Calidad fotorrealista inferior a FLUX</li>
+                <li>M1 básico: inviable local</li>
+                <li>SD 1.5 ya está obsoleto</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- VIDEO -->
+  <div class="sec reveal">
+    <p class="sec-tag">02 · Generación de Video (Image to Video)</p>
+    <h2>El video es <em>el futuro</em> — y ya es el presente</h2>
+    <p class="sec-intro">Las AI influencers que crecen en 2026 son las que hacen video. Tus opciones reales según presupuesto y libertad creativa.</p>
+
+    <div class="tools-grid">
+
+      <!-- Kling -->
+      <div class="tool-card" onclick="toggle(this)">
+        <div class="tool-head">
+          <div class="tool-icon ic-y">🎬</div>
+          <div class="tool-info">
+            <div class="tool-name">Kling AI 3.0</div>
+            <div class="tool-tagline">#1 en benchmarks · mejor movimiento humano del mercado</div>
+          </div>
+          <div class="tool-badges">
+            <span class="tbadge b-free">66 créditos/día gratis</span>
+            <span class="tbadge b-paid">$6.99/mes Standard</span>
+          </div>
+          <span class="chevron-btn">▾</span>
+        </div>
+        <div class="tool-body">
+          <div class="tool-grid">
+            <div class="tstat"><div class="tstat-l">Ranking 2026</div><div class="tstat-v">#1 ELO</div></div>
+            <div class="tstat"><div class="tstat-l">Plan Standard</div><div class="tstat-v">$6.99/mes</div></div>
+            <div class="tstat"><div class="tstat-l">Duración</div><div class="tstat-v">Hasta 15s (3.0)</div></div>
+            <div class="tstat"><div class="tstat-l">Resolución</div><div class="tstat-v">4K nativo</div></div>
+          </div>
+          <p class="tool-verdict">Con la salida de Sora (cerrado en marzo 2026), Kling es el rey indiscutible. <strong>Kling 3.0</strong> tiene el sistema "Elements" con "Director Memory" — subes referencias de Paula y mantiene identidad entre clips. El tier Standard a $6.99/mes incluye derechos comerciales. El free da 66 créditos/día, suficiente para 6 clips de 5 segundos de prueba. <strong>Esta es tu herramienta de video principal.</strong></p>
+          <div class="pros-cons">
+            <div class="pc-box">
+              <div class="pc-title pros">PROS</div>
+              <ul class="pc-list pros-l">
+                <li>Mejor movimiento humano del mercado</li>
+                <li>Character consistency con Elements 3.0</li>
+                <li>$6.99/mes con derechos comerciales</li>
+                <li>Tier gratis para testear</li>
+                <li>Audio nativo en 3.0</li>
+                <li>Image-to-video muy bueno</li>
+              </ul>
+            </div>
+            <div class="pc-box">
+              <div class="pc-title cons">CONTRAS</div>
+              <ul class="pc-list cons-l">
+                <li>Créditos no se acumulan</li>
+                <li>Empresa china (datos)</li>
+                <li>Soporte al cliente pobre</li>
+                <li>3.0 completo: tier Ultra</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Higgsfield -->
+      <div class="tool-card" onclick="toggle(this)">
+        <div class="tool-head">
+          <div class="tool-icon ic-c">🎥</div>
+          <div class="tool-info">
+            <div class="tool-name">Higgsfield AI</div>
+            <div class="tool-tagline">Agregador de 15+ modelos · Soul ID para consistencia · pago a creadores</div>
+          </div>
+          <div class="tool-badges">
+            <span class="tbadge b-free">Tier gratis</span>
+            <span class="tbadge b-hot">AI Influencer nativo</span>
+          </div>
+          <span class="chevron-btn">▾</span>
+        </div>
+        <div class="tool-body">
+          <div class="tool-grid">
+            <div class="tstat"><div class="tstat-l">Modelos</div><div class="tstat-v">15+ (Kling, Veo, Wan)</div></div>
+            <div class="tstat"><div class="tstat-l">Soul ID</div><div class="tstat-v">Consistencia de personaje</div></div>
+            <div class="tstat"><div class="tstat-l">Creator Fund</div><div class="tstat-v">+$1M pagado</div></div>
+            <div class="tstat"><div class="tstat-l">M1 compatible</div><div class="tstat-v">Sí (cloud)</div></div>
+          </div>
+          <p class="tool-verdict">Lo más interesante de Higgsfield para ti: <strong>Soul ID</strong> — sube fotos de Paula y el sistema mantiene identidad visual consistente a través de los videos. Además tiene un programa de monetización "Higgsfield Earn" donde pagas por crear content con AI influencers para campañas de marcas ($1,000 máximo por video en el primer día). Una plataforma que puede ser ingresos directos mientras desarrollas el resto.</p>
+          <div class="pros-cons">
+            <div class="pc-box">
+              <div class="pc-title pros">PROS</div>
+              <ul class="pc-list pros-l">
+                <li>Soul ID = Paula consistente en video</li>
+                <li>Acceso a Kling, Veo 3.1, Wan 2.6</li>
+                <li>Programa de monetización propio</li>
+                <li>Batch creation desde 1 foto</li>
+                <li>Tier gratuito funcional</li>
+              </ul>
+            </div>
+            <div class="pc-box">
+              <div class="pc-title cons">CONTRAS</div>
+              <ul class="pc-list cons-l">
+                <li>Precio no competitivo vs Kling directo</li>
+                <li>Más complejo de aprender</li>
+                <li>Filtros más estrictos que Grok</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wan 2.2 -->
+      <div class="tool-card" onclick="toggle(this)">
+        <div class="tool-head">
+          <div class="tool-icon ic-g">🌊</div>
+          <div class="tool-info">
+            <div class="tool-name">Wan 2.2 (open source)</div>
+            <div class="tool-tagline">La alternativa gratuita real · RunPod + ComfyUI · más permisivo</div>
+          </div>
+          <div class="tool-badges">
+            <span class="tbadge b-open">Open Source</span>
+            <span class="tbadge b-free">Gratis en RunPod</span>
+          </div>
+          <span class="chevron-btn">▾</span>
+        </div>
+        <div class="tool-body">
+          <div class="tool-grid">
+            <div class="tstat"><div class="tstat-l">Costo</div><div class="tstat-v">~$0.20–0.50/hr GPU</div></div>
+            <div class="tstat"><div class="tstat-l">Permisividad</div><div class="tstat-v">Alta (sin filtros)</div></div>
+            <div class="tstat"><div class="tstat-l">Start/end frame</div><div class="tstat-v">Sí (2.2)</div></div>
+            <div class="tstat"><div class="tstat-l">vs Kling calidad</div><div class="tstat-v">Buena, no igual</div></div>
+          </div>
+          <p class="tool-verdict">Wan 2.2 en RunPod es la opción más permisiva y económica. Sin filtros de censura, pagas solo lo que generas (~$0.20/hr en A100). El tradeoff: la calidad de movimiento humano no iguala a Kling 3.0, y el setup en ComfyUI requiere saber lo que haces. Con tu experiencia técnica, <strong>esto es viable y puede complementar a Kling cuando necesitas contenido más libre.</strong></p>
+          <div class="pros-cons">
+            <div class="pc-box">
+              <div class="pc-title pros">PROS</div>
+              <ul class="pc-list pros-l">
+                <li>Sin filtros de contenido</li>
+                <li>Pay-as-you-go (muy barato)</li>
+                <li>ComfyUI ready</li>
+                <li>Start/end frame control</li>
+              </ul>
+            </div>
+            <div class="pc-box">
+              <div class="pc-title cons">CONTRAS</div>
+              <ul class="pc-list cons-l">
+                <li>Setup técnico requerido</li>
+                <li>Calidad inferior a Kling 3.0</li>
+                <li>Sin character consistency nativa</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Runway -->
+      <div class="tool-card" onclick="toggle(this)">
+        <div class="tool-head">
+          <div class="tool-icon ic-o">✈️</div>
+          <div class="tool-info">
+            <div class="tool-name">Runway Gen-4.5</div>
+            <div class="tool-tagline">El veterano profesional · mejor para post-producción e integración editorial</div>
+          </div>
+          <div class="tool-badges">
+            <span class="tbadge b-paid">$15/mes Basic</span>
+          </div>
+          <span class="chevron-btn">▾</span>
+        </div>
+        <div class="tool-body">
+          <div class="tool-grid">
+            <div class="tstat"><div class="tstat-l">Fortaleza</div><div class="tstat-v">Post-producción</div></div>
+            <div class="tstat"><div class="tstat-l">vs Kling calidad</div><div class="tstat-v">Similar</div></div>
+            <div class="tstat"><div class="tstat-l">Precio/calidad</div><div class="tstat-v">Peor que Kling</div></div>
+            <div class="tstat"><div class="tstat-l">Editor integrado</div><div class="tstat-v">Sí</div></div>
+          </div>
+          <p class="tool-verdict">Runway sigue siendo muy bueno pero Kling lo supera en precio/calidad para tu caso de uso específico. Su ventaja real es el editor integrado y las herramientas de post-producción — útil si vas a hacer contenido editorial más elaborado. Para Paula day-to-day, Kling es mejor inversión.</p>
+          <div class="pros-cons">
+            <div class="pc-box">
+              <div class="pc-title pros">PROS</div>
+              <ul class="pc-list pros-l">
+                <li>Editor integrado potente</li>
+                <li>Interfaz profesional</li>
+                <li>Buena calidad general</li>
+              </ul>
+            </div>
+            <div class="pc-box">
+              <div class="pc-title cons">CONTRAS</div>
+              <ul class="pc-list cons-l">
+                <li>Más caro por resultado que Kling</li>
+                <li>Sin audio nativo</li>
+                <li>Derechos comerciales: tier $28+</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- RUNPOD -->
+  <div class="sec reveal">
+    <p class="sec-tag">03 · Infrastructure · Tu M1 + Cloud</p>
+    <h2>RunPod sigue siendo <em>tu GPU</em></h2>
+    <p class="sec-intro">Con un M1 básico, la nube es tu aliada. RunPod + ComfyUI es el setup más económico para volumen.</p>
+
+    <div class="runpod-box">
+      <div style="font-size:14px;color:var(--muted2);margin-bottom:4px">Tu workflow recomendado en RunPod</div>
+      <div style="font-size:20px;font-weight:700;color:var(--cyan);margin-bottom:16px">M1 como cerebro · RunPod como músculo</div>
+      <div class="runpod-grid">
+        <div class="rp-card">
+          <div class="rp-card-title">FLUX.2 [dev] imagen</div>
+          <div class="rp-card-note">ComfyUI en A100 para generar batches de Paula cuando Nano no alcanza o el contenido requiere más libertad.</div>
+          <div class="rp-price">~$0.20/hr</div>
+        </div>
+        <div class="rp-card">
+          <div class="rp-card-title">Wan 2.2 video</div>
+          <div class="rp-card-note">Para video sin filtros cuando Kling free se queda corto. Ideal para contenido de Fanvue que no puede subir a plataformas restrictivas.</div>
+          <div class="rp-price">~$0.30/hr</div>
+        </div>
+        <div class="rp-card">
+          <div class="rp-card-title">SD 3.5 + LoRAs</div>
+          <div class="rp-card-note">Para experimentos con LoRAs de Paula. Más lento que FLUX pero con la ventaja del ecosistema masivo de fine-tunes de CivitAI.</div>
+          <div class="rp-price">~$0.15/hr</div>
+        </div>
+        <div class="rp-card">
+          <div class="rp-card-title">ComfyUI Cloud</div>
+          <div class="rp-card-note">Ya lo conoces. Las plantillas de la comunidad están listas para FLUX y Wan. Tu experiencia con ComfyUI local aplica directo.</div>
+          <div class="rp-price">Pay-as-you-go</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- WORKFLOW RECOMENDADO -->
+  <div class="sec reveal">
+    <p class="sec-tag">04 · Tu Stack Recomendado</p>
+    <h2>El workflow <em>óptimo</em> para Paula</h2>
+    <p class="sec-intro">Basado en tu perfil, presupuesto ajustado, y objetivos de contenido.</p>
+
+    <div class="workflow">
+      <div class="wf-title">Pipeline de contenido · Paula Diaz</div>
+      <div class="wf-chain">
+        <div class="wf-step">
+          <div class="wf-step-title">Foto base</div>
+          <div class="wf-step-tool">Nano Banana</div>
+        </div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step">
+          <div class="wf-step-title">Edición/variantes</div>
+          <div class="wf-step-tool">FLUX Kontext</div>
+        </div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step">
+          <div class="wf-step-title">Video clip</div>
+          <div class="wf-step-tool">Kling 3.0</div>
+        </div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step">
+          <div class="wf-step-title">Voz</div>
+          <div class="wf-step-tool">ElevenLabs</div>
+        </div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step">
+          <div class="wf-step-title">Edición final</div>
+          <div class="wf-step-tool">CapCut</div>
+        </div>
+      </div>
+      <p class="wf-note">Para contenido más libre (Fanvue): <strong>Mage.space / Wan 2.2 en RunPod</strong> reemplaza a Nano en ese pipeline. Para volumen económico sin restricciones: <strong>FLUX.2 en RunPod</strong> a $0.20/hr.</p>
+    </div>
+
+    <div style="margin-top:12px">
+    <div class="rec-box">
+      <div class="rec-title">Veredicto Honesto · Por Prioridad</div>
+      <p><strong>Prioridad 1 (esta semana):</strong> Explorar Mage.space — es el reemplazo más directo de Grok para contenido de Paula en Fanvue. Plan Pro+ a $60/mes con generaciones ilimitadas. Compáralo con lo que gastas en Nano para el mismo volumen.</p>
+      <p style="margin-top:10px"><strong>Prioridad 2 (este mes):</strong> Kling 3.0 Standard a $6.99/mes. Punto. El mejor ROI en video del mercado. Con Elements 3.0 puedes mantener la identidad de Paula entre clips — eso cambia el juego para los reels.</p>
+      <p style="margin-top:10px"><strong>Prioridad 3 (cuando tengas ingresos):</strong> RunPod con FLUX.2 y Wan 2.2 para los workflows agénticos — n8n genera el prompt, RunPod procesa, el resultado va directo al pipeline. Eso es la automatización real.</p>
+      <p style="margin-top:10px"><strong>Sobre SD y SDXL:</strong> Tu experiencia no se desperdicia — FLUX es el heredero natural. Todo lo que sabes de ComfyUI aplica. Actualízate a FLUX.2 en RunPod y verás la diferencia inmediata.</p>
+    </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- TABLA COMPARATIVA -->
+  <div class="sec reveal">
+    <p class="sec-tag">05 · Comparativa Rápida</p>
+    <h2>Todo en <em>una tabla</em></h2>
+
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>Herramienta</th>
+          <th>Tipo</th>
+          <th>Costo</th>
+          <th>Calidad</th>
+          <th>Permisividad</th>
+          <th>Para Paula?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tool-col">Nano Banana</td>
+          <td>Imagen cloud</td>
+          <td>API pago</td>
+          <td><div class="rating"><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div></div></td>
+          <td>Media</td>
+          <td>✅ Principal imagen</td>
+        </tr>
+        <tr>
+          <td class="tool-col">Mage · Mango 2</td>
+          <td>Imagen cloud</td>
+          <td>$30–200/mes</td>
+          <td><div class="rating"><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot"></div></div></td>
+          <td>Alta</td>
+          <td>✅ Fanvue content</td>
+        </tr>
+        <tr>
+          <td class="tool-col">FLUX.2</td>
+          <td>Open weights</td>
+          <td>RunPod ~$0.20/hr</td>
+          <td><div class="rating"><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div></div></td>
+          <td>Alta (sin filtros)</td>
+          <td>✅ Volumen / agentes</td>
+        </tr>
+        <tr>
+          <td class="tool-col">SD 3.5 + Forge</td>
+          <td>Open source</td>
+          <td>Gratis (GPU propia)</td>
+          <td><div class="rating"><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot"></div><div class="dot"></div></div></td>
+          <td>Alta</td>
+          <td>⚠️ LoRAs / experimentos</td>
+        </tr>
+        <tr>
+          <td class="tool-col">Kling 3.0</td>
+          <td>Video cloud</td>
+          <td>Gratis / $6.99/mes</td>
+          <td><div class="rating"><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div></div></td>
+          <td>Media</td>
+          <td>✅ Video principal</td>
+        </tr>
+        <tr>
+          <td class="tool-col">Higgsfield</td>
+          <td>Video cloud</td>
+          <td>Tier gratis disponible</td>
+          <td><div class="rating"><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot"></div></div></td>
+          <td>Media</td>
+          <td>✅ Soul ID + monetización</td>
+        </tr>
+        <tr>
+          <td class="tool-col">Wan 2.2</td>
+          <td>Video open source</td>
+          <td>RunPod ~$0.30/hr</td>
+          <td><div class="rating"><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot"></div><div class="dot"></div></div></td>
+          <td>Muy alta</td>
+          <td>✅ Fanvue / sin filtros</td>
+        </tr>
+        <tr>
+          <td class="tool-col">Runway Gen-4.5</td>
+          <td>Video cloud</td>
+          <td>$15/mes</td>
+          <td><div class="rating"><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot"></div></div></td>
+          <td>Media</td>
+          <td>⚠️ Opcional / editorial</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /wrap -->
+
+<div class="footer">
+  Investigación basada en datos de mayo 2026 · Precios sujetos a cambio · Verifica antes de suscribirte<br>
+  Compilado para el workflow de Paula Diaz · PixelMuseAgency
+</div>
+
+<script>
+function toggle(card){
+  const was=card.classList.contains('open');
+  document.querySelectorAll('.tool-card.open').forEach(c=>c.classList.remove('open'));
+  if(!was)card.classList.add('open');
+}
+
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>
