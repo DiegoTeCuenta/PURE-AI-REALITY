@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lo que Claude puede hacer — Guía de Capacidades</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#faf8f4;
+  --ink:#1a1814;
+  --muted:#7a756c;
+  --muted2:#b0aa9f;
+  --surface:#f0ece4;
+  --surface2:#e8e2d8;
+  --border:#ddd8cf;
+  --accent:#c8492a;
+  --accent2:#2a6bc8;
+  --accent3:#2a9c5a;
+  --yellow:#e8b830;
+  --head:'DM Serif Display',serif;
+  --body:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.7;min-height:100vh}
+
+/* HERO */
+.hero{padding:72px 40px 56px;max-width:900px;margin:0 auto;border-bottom:1px solid var(--border)}
+.hero-kicker{font-size:11px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:20px;opacity:0;animation:up .4s .05s forwards}
+.hero h1{font-family:var(--head);font-size:clamp(44px,7vw,80px);line-height:1;letter-spacing:-.02em;margin-bottom:20px;opacity:0;animation:up .5s .15s forwards}
+.hero h1 i{font-style:italic;color:var(--accent)}
+.hero-sub{font-size:16px;font-weight:300;color:var(--muted);max-width:480px;line-height:1.6;opacity:0;animation:up .5s .25s forwards}
+
+/* LAYOUT */
+.wrap{max-width:900px;margin:0 auto;padding:0 40px}
+.sec{padding:56px 0 0;opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s}
+.sec.vis{opacity:1;transform:translateY(0)}
+.sec-num{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px}
+.sec h2{font-family:var(--head);font-size:clamp(26px,4vw,38px);line-height:1.1;margin-bottom:6px}
+.sec h2 i{font-style:italic;color:var(--accent)}
+.sec-intro{font-size:14px;color:var(--muted);margin-bottom:32px;max-width:520px;font-weight:300}
+hr.div{border:none;border-top:1px solid var(--border);margin:56px 0 0}
+
+/* CAPABILITY CARDS */
+.cap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:8px}
+.cap{background:var(--bg);padding:24px 22px;transition:background .15s;cursor:pointer}
+.cap:hover{background:var(--surface)}
+.cap.open{background:var(--surface)}
+.cap-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:0}
+.cap-icon{font-size:22px;flex-shrink:0;margin-top:1px}
+.cap-title{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:3px}
+.cap-tagline{font-size:12px;color:var(--muted);line-height:1.4}
+.cap-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px;margin-left:auto}
+.dot-yes{background:var(--accent3)}
+.dot-partial{background:var(--yellow)}
+.dot-no{background:var(--muted2)}
+.cap-detail{display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:13px;color:var(--muted);line-height:1.6}
+.cap.open .cap-detail{display:block}
+.cap-detail strong{color:var(--ink);font-weight:500}
+
+/* STATUS PILLS */
+.status-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+.st{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.st-dot{width:8px;height:8px;border-radius:50%}
+
+/* WORKFLOW DIAGRAM */
+.flow{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.flow-row{display:grid;grid-template-columns:180px 1fr;border-bottom:1px solid var(--border)}
+.flow-row:last-child{border-bottom:none}
+.flow-label{background:var(--surface);padding:16px 18px;display:flex;align-items:center;gap:10px;border-right:1px solid var(--border)}
+.flow-label-icon{font-size:18px}
+.flow-label-text{font-size:12px;font-weight:500;color:var(--ink)}
+.flow-content{padding:16px 20px;background:var(--bg)}
+.flow-items{display:flex;flex-wrap:wrap;gap:8px}
+.flow-item{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;color:var(--muted)}
+.flow-item.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.flow-item.partial{background:var(--surface2);border-color:var(--border);color:var(--ink)}
+
+/* AGENT SECTION */
+.agent-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:10px}
+.agent-header{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.agent-icon{width:44px;height:44px;border-radius:10px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.agent-title{font-size:15px;font-weight:500;color:var(--ink);margin-bottom:2px}
+.agent-sub{font-size:12px;color:var(--muted)}
+.agent-steps{display:flex;flex-direction:column;gap:8px}
+.step{display:flex;gap:12px;align-items:flex-start}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-body{font-size:13px;color:var(--muted);line-height:1.5}
+.step-body strong{color:var(--ink);font-weight:500}
+.tool-tag{display:inline-block;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 7px;font-size:11px;color:var(--muted);margin:1px 2px}
+
+/* PLAN BOX */
+.plan-box{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:10px}
+.plan-head{background:var(--ink);padding:18px 22px;display:flex;align-items:center;justify-content:space-between}
+.plan-head-title{font-family:var(--head);font-size:20px;color:var(--bg)}
+.plan-price{font-size:13px;color:rgba(255,255,255,.6)}
+.plan-body{padding:20px 22px;background:var(--bg)}
+.plan-items{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pi{display:flex;gap:8px;align-items:flex-start;font-size:13px;padding:4px 0}
+.pi-icon{flex-shrink:0;margin-top:2px}
+.pi.yes .pi-icon{color:var(--accent3)}
+.pi.no .pi-icon{color:var(--muted2)}
+.pi.partial .pi-icon{color:var(--yellow)}
+.pi-text{color:var(--muted);line-height:1.4}
+.pi.yes .pi-text{color:var(--ink)}
+
+/* CALLOUT */
+.callout{background:var(--surface);border-left:3px solid var(--accent);padding:16px 20px;border-radius:0 8px 8px 0;margin-top:10px}
+.callout p{font-size:13.5px;color:var(--muted);line-height:1.6}
+.callout strong{color:var(--ink);font-weight:500}
+.callout-title{font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+
+/* FOOTER */
+.footer{text-align:center;padding:56px 40px 40px;font-size:12px;color:var(--muted2);border-top:1px solid var(--border);margin-top:56px}
+
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-kicker">Guía personal · Claude Sonnet · Plan $20/mes</div>
+  <h1>Lo que puedo<br>hacer <i>contigo</i></h1>
+  <p class="hero-sub">Capacidades reales, herramientas externas, y cómo conectar todo para tu workflow de creador.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- QUÉ PUEDO HACER AQUÍ -->
+  <div class="sec" id="s1">
+    <p class="sec-num">01 · Directamente en este chat</p>
+    <h2>Lo que puedo hacer <i>ahora mismo</i></h2>
+    <p class="sec-intro">Sin configuración extra, sin herramientas adicionales. Haz clic en cada capacidad para ver el detalle.</p>
+
+    <div class="status-row">
+      <div class="st"><div class="st-dot" style="background:var(--accent3)"></div>Disponible ahora</div>
+      <div class="st"><div class="st-dot" style="background:var(--yellow)"></div>Parcial / con ayuda tuya</div>
+      <div class="st"><div class="st-dot" style="background:var(--muted2)"></div>Requiere herramientas externas</div>
+    </div>
+
+    <div class="cap-grid">
+      <div class="cap" onclick="tog(this)">
+        <div class="cap-header">
+          <div class="cap-icon">✍️</div>
+          <div>
+            <div class="cap-title">Escritura y copy</div>
+            <div class="cap-tagline">Captions, bios, descripciones, guiones, emails</div>
+          </div>
+          <div class="cap-dot dot-yes"></div>
+        </div>
+        <div class="cap-detail">Todo lo que has visto: captions para TikTok/IG/Twitter en la voz de Paula, descripciones de packs para Fanvue, textos de bios, mensajes automáticos. También guiones de video, scripts para ElevenLabs, copy de listings de Etsy. <strong>Sin límite de volumen.</strong></div>
+      </div>
+
+      <div class="cap" onclick="tog(this)">
+        <div class="cap-header">
+          <div class="cap-icon">📊</div>
+          <div>
+            <div class="cap-title">Análisis de datos</div>
+            <div class="cap-tagline">CSVs, analytics, patrones de contenido</div>
+          </div>
+          <div class="cap-dot dot-yes"></div>
+        </div>
+        <div class="cap-detail">Sube cualquier CSV o archivo de datos y lo analizo. Ya lo hiciste con los analytics de TikTok, IG y Facebook — identifiqué los patrones de vistas y los picos. <strong>Funciona con Excel, CSV, JSON</strong> que me subas directamente.</div>
+      </div>
+
+      <div class="cap" onclick="tog(this)">
+        <div class="cap-header">
+          <div class="cap-icon">🎨</div>
+          <div>
+            <div class="cap-title">Diseño visual / HTML</div>
+            <div class="cap-tagline">Guías, dashboards, widgets interactivos</div>
+          </div>
+          <div class="cap-dot dot-yes"></div>
+        </div>
+        <div class="cap-detail">Creo HTML completo que puedes abrir en el navegador — como esta guía, el calendario semanal interactivo, la guía de herramientas AI, el mapa de nichos. <strong>Incluye CSS, JavaScript, animaciones.</strong> También SVGs, diagramas, y visualizaciones de datos.</div>
+      </div>
+
+      <div class="cap" onclick="tog(this)">
+        <div class="cap-header">
+          <div class="cap-icon">🧠</div>
+          <div>
+            <div class="cap-title">Estrategia y planificación</div>
+            <div class="cap-tagline">Calendarios, planes de ataque, análisis de negocio</div>
+          </div>
+          <div class="cap-dot dot-yes"></div>
+        </div>
+        <div class="cap-detail">Calendarios de contenido, análisis de plataformas, planes de monetización, estrategias de nicho, análisis competitivo. Todo lo que hemos hecho esta semana: el plan de Paula, el análisis de Etsy, la ruta de agentes. <strong>Basado en datos reales cuando me los das.</strong></div>
+      </div>
+
+      <div class="cap" onclick="tog(this)">
+        <div class="cap-header">
+          <div class="cap-icon">🔍</div>
+          <div>
+            <div class="cap-title">Búsqueda web en tiempo real</div>
+            <div class="cap-tagline">Noticias, precios, herramientas actuales</div>
+          </div>
+          <div class="cap-dot dot-yes"></div>
+        </div>
+        <div class="cap-detail">Tengo acceso a búsqueda web — la usé para la guía de herramientas AI con precios de Kling, Mage, Higgsfield actualizados a mayo 2026. <strong>Cualquier pregunta sobre herramientas, precios, o noticias recientes:</strong> busco antes de responder para darte info actualizada.</div>
+      </div>
+
+      <div class="cap" onclick="tog(this)">
+        <div class="cap-header">
+          <div class="cap-icon">💬</div>
+          <div>
+            <div class="cap-title">Roleplay / voz de personaje</div>
+            <div class="cap-tagline">Respuestas como Paula, mensajes de Fanvue</div>
+          </div>
+          <div class="cap-dot dot-yes"></div>
+        </div>
+        <div class="cap-detail">Puedo escribir en la voz de Paula — respuestas a comentarios, mensajes de Fanvue, captions en primera persona. También puedo ayudarte a construir un banco de respuestas tipo para los DMs más frecuentes. <strong>Muéstrame el mensaje y te doy la respuesta lista.</strong></div>
+      </div>
+
+      <div class="cap" onclick="tog(this)">
+        <div class="cap-header">
+          <div class="cap-icon">💻</div>
+          <div>
+            <div class="cap-title">Código y scripts</div>
+            <div class="cap-tagline">Python, JavaScript, prompts de API, workflows</div>
+          </div>
+          <div class="cap-dot dot-yes"></div>
+        </div>
+        <div class="cap-detail">Escribo y ejecuto código directamente — Python, JavaScript, bash. Puedo crear scripts para automatizar tareas, escribir los workflows de n8n, armar los prompts para Claude API, o ayudarte a depurar código que ya tengas. <strong>Puedo ejecutar el código aquí mismo y mostrarte el resultado.</strong></div>
+      </div>
+
+      <div class="cap" onclick="tog(this)">
+        <div class="cap-header">
+          <div class="cap-icon">📁</div>
+          <div>
+            <div class="cap-title">Lectura de archivos subidos</div>
+            <div class="cap-tagline">PDFs, imágenes, docs, CSVs que tú me subas</div>
+          </div>
+          <div class="cap-dot dot-partial"></div>
+        </div>
+        <div class="cap-detail">Leo cualquier archivo que me subas manualmente: PDFs (como el de Paula), imágenes para analizarlas, CSVs de analytics, documentos Word. <strong>Lo que no puedo es acceder a tu disco duro solo</strong> — tienes que subir el archivo tú. Pero una vez que lo subes, lo proceso completo.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <!-- AGENTES -->
+  <div class="sec" id="s2">
+    <p class="sec-num">02 · Con herramientas externas</p>
+    <h2>Agentes que <i>leen y actúan</i></h2>
+    <p class="sec-intro">Lo que no puedo hacer solo — pero que puedes construir conectando herramientas. Te explico el setup exacto.</p>
+
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-icon">🗂️</div>
+        <div>
+          <div class="agent-title">Agente que lee y cataloga tus discos</div>
+          <div class="agent-sub">Organizar el archivo de Paula automáticamente</div>
+        </div>
+      </div>
+      <div class="agent-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body"><strong>n8n (gratis, self-hosted en tu M1)</strong> — el orquestador. Lee carpetas de tu Mac, lista archivos, los clasifica por nombre/fecha/metadata.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body"><strong>Claude API (Haiku, muy barato)</strong> — recibe el nombre del archivo y decide la categoría: "pool · La Villa · bikini · 2026-05" y lo mueve a la carpeta correcta.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body"><strong>Resultado:</strong> corres el workflow una vez por semana, tus miles de fotos de Paula quedan catalogadas por locación, outfit, y fecha automáticamente.</div>
+        </div>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--muted)">
+        Herramientas: <span class="tool-tag">n8n</span><span class="tool-tag">Claude API</span><span class="tool-tag">Node.js (ya en tu M1)</span>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-icon">📝</div>
+        <div>
+          <div class="agent-title">Agente de listings para Etsy</div>
+          <div class="agent-sub">Generar título SEO + descripción + tags automáticamente</div>
+        </div>
+      </div>
+      <div class="agent-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">Nano Banana genera el batch de imágenes del tema de la semana.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body"><strong>n8n</strong> detecta las imágenes nuevas en la carpeta de salida.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body"><strong>Claude API</strong> recibe el nombre del pack y genera: título SEO optimizado para Etsy + descripción + 13 tags. Sale listo para copiar y pegar.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">Opcional: <strong>Pinterest automático</strong> — n8n sube un pin por imagen con link al listing.</div>
+        </div>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--muted)">
+        Herramientas: <span class="tool-tag">n8n</span><span class="tool-tag">Claude API (Haiku)</span><span class="tool-tag">Pinterest API</span>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-icon">📱</div>
+        <div>
+          <div class="agent-title">Agente de programación de contenido</div>
+          <div class="agent-sub">Caption + hashtags + schedule automático</div>
+        </div>
+      </div>
+      <div class="agent-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">Tú apruebas las fotos de la semana y las metes en una carpeta.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body"><strong>n8n + Claude API</strong> genera el caption en la voz de Paula + hashtags para cada foto, diferenciado por plataforma (TikTok vs IG vs Twitter).</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body"><strong>Meta Business Suite API</strong> programa IG y Facebook automáticamente a las 7pm.</div>
+        </div>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--muted)">
+        Herramientas: <span class="tool-tag">n8n</span><span class="tool-tag">Claude API</span><span class="tool-tag">Meta Graph API</span><span class="tool-tag">Buffer (alternativa)</span>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="div">
+
+  <!-- LO QUE NO PUEDO -->
+  <div class="sec" id="s3">
+    <p class="sec-num">03 · Límites reales</p>
+    <h2>Lo que <i>no puedo</i> hacer</h2>
+    <p class="sec-intro">Sin rodeos — para que no pierdas tiempo.</p>
+
+    <div class="plan-box">
+      <div class="plan-head">
+        <div class="plan-head-title">Claude.ai · Plan $20/mes</div>
+        <div class="plan-price">Sonnet 4.6 · Lo que tienes</div>
+      </div>
+      <div class="plan-body">
+        <div class="plan-items">
+          <div class="pi yes"><div class="pi-icon">✓</div><div class="pi-text">Conversaciones largas y complejas como esta</div></div>
+          <div class="pi yes"><div class="pi-icon">✓</div><div class="pi-text">Búsqueda web en tiempo real</div></div>
+          <div class="pi yes"><div class="pi-icon">✓</div><div class="pi-text">Leer archivos que subes (PDF, CSV, imágenes)</div></div>
+          <div class="pi yes"><div class="pi-icon">✓</div><div class="pi-text">Crear y ejecutar código</div></div>
+          <div class="pi yes"><div class="pi-icon">✓</div><div class="pi-text">HTML/CSS/JS interactivo descargable</div></div>
+          <div class="pi yes"><div class="pi-icon">✓</div><div class="pi-text">Análisis de datos y estrategia</div></div>
+          <div class="pi no"><div class="pi-icon">✗</div><div class="pi-text">Acceder a tu disco duro directamente</div></div>
+          <div class="pi no"><div class="pi-icon">✗</div><div class="pi-text">Ejecutar acciones en tu Mac (abrir apps, mover archivos)</div></div>
+          <div class="pi no"><div class="pi-icon">✗</div><div class="pi-text">Llamar a APIs externas por ti (eso es Claude API separada)</div></div>
+          <div class="pi no"><div class="pi-icon">✗</div><div class="pi-text">Ver videos de YouTube directamente</div></div>
+          <div class="pi partial"><div class="pi-icon">~</div><div class="pi-text">Navegar links (solo con extensión Chrome conectada)</div></div>
+          <div class="pi partial"><div class="pi-icon">~</div><div class="pi-text">Memoria entre sesiones (sin activar la función de memoria)</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title">La diferencia importante</div>
+      <p><strong>Claude.ai ($20/mes)</strong> es para trabajar conmigo directamente en el chat — estrategia, escritura, análisis, código, diseño. <strong>Claude API</strong> es para que tus agentes me llamen automáticamente sin que estés presente — eso se factura por uso separado en anthropic.com, pero es muy barato con el modelo Haiku para tareas repetitivas.</p>
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <!-- ROADMAP -->
+  <div class="sec" id="s4">
+    <p class="sec-num">04 · Por dónde empezar</p>
+    <h2>El orden <i>correcto</i></h2>
+    <p class="sec-intro">Sin invertir dinero hasta que haya retorno.</p>
+
+    <div class="flow">
+      <div class="flow-row">
+        <div class="flow-label">
+          <div class="flow-label-icon">🟢</div>
+          <div class="flow-label-text">Ahora · gratis</div>
+        </div>
+        <div class="flow-content">
+          <div class="flow-items">
+            <div class="flow-item active">Yo aquí en chat</div>
+            <div class="flow-item active">n8n self-hosted en M1</div>
+            <div class="flow-item active">Meta Business Suite</div>
+            <div class="flow-item active">Fanvue (gratis)</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-label">
+          <div class="flow-label-icon">🟡</div>
+          <div class="flow-label-text">Cuando Paula tenga ingresos</div>
+        </div>
+        <div class="flow-content">
+          <div class="flow-items">
+            <div class="flow-item partial">Claude API Haiku (~$5/mes para agentes)</div>
+            <div class="flow-item partial">Kling Standard ($6.99/mes)</div>
+            <div class="flow-item partial">RunPod pay-as-you-go</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-label">
+          <div class="flow-label-icon">🔵</div>
+          <div class="flow-label-text">Cuando el flujo esté automatizado</div>
+        </div>
+        <div class="flow-content">
+          <div class="flow-items">
+            <div class="flow-item">Buffer / Later (schedule automático)</div>
+            <div class="flow-item">Mage Pro ($30/mes)</div>
+            <div class="flow-item">Pinterest API</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:20px">
+      <div class="callout-title">El primer paso concreto</div>
+      <p>Instala <strong>n8n en tu M1</strong> — es Node.js, corre perfecto, es gratis forever en self-hosted. Con eso solo ya puedes automatizar la catalogación de fotos y la generación de captions. Cuando quieras, te armo el tutorial paso a paso.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Guía personal · Claude Sonnet 4.6 · Mayo 2026<br>
+  Hecha para el workflow de PixelMuseAgency · Paula Diaz
+</div>
+
+<script>
+function tog(el){
+  const was=el.classList.contains('open');
+  document.querySelectorAll('.cap.open').forEach(c=>c.classList.remove('open'));
+  if(!was)el.classList.add('open');
+}
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')});
+},{threshold:0.08});
+document.querySelectorAll('.sec').forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
