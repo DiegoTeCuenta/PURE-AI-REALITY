@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fondo Neón Flow</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  canvas { display: block; width: 100vw; height: 100vh; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d', { alpha: false });
+
+// ---- Ajustes rápidos -------------------------------------------------
+const CONFIG = {
+  count: 900,        // nº de partículas
+  speed: 1.6,        // velocidad de flujo
+  fade: 0.06,        // estela: más bajo = estelas más largas
+  hueBase: 175,      // tono base (175 cian, 210 azul, 280 violeta)
+  hueRange: 45,      // variación de tono
+  core: 1.0,         // grosor del núcleo brillante
+  glow: 3.5,         // grosor del resplandor (ancho)
+  dprCap: 1.5        // techo de resolución (1 = más rápido, 2 = más nítido)
+};
+// ---------------------------------------------------------------------
+
+let W, H, DPR;
+function resize() {
+  DPR = Math.min(window.devicePixelRatio || 1, CONFIG.dprCap);
+  W = canvas.width = Math.floor(window.innerWidth * DPR);
+  H = canvas.height = Math.floor(window.innerHeight * DPR);
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+}
+window.addEventListener('resize', resize);
+resize();
+
+function flowAngle(x, y, t) {
+  const s = 0.0011 / DPR;
+  const v = Math.sin(x * s + t) +
+            Math.sin(y * s * 1.3 - t * 0.8) +
+            Math.sin((x + y) * s * 0.7 + t * 0.5);
+  return v * Math.PI;
+}
+
+const particles = [];
+for (let i = 0; i < CONFIG.count; i++) {
+  particles.push({ x: Math.random() * W, y: Math.random() * H, life: Math.random() * 200 });
+}
+
+let t = 0;
+function frame() {
+  // Velo: deja estelas (sin sombras)
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.fillStyle = `rgba(0,0,0,${CONFIG.fade})`;
+  ctx.fillRect(0, 0, W, H);
+
+  // Glow falso por doble trazo aditivo, SIN shadowBlur
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.lineCap = 'round';
+
+  t += 0.0016;
+
+  for (const p of particles) {
+    const a = flowAngle(p.x, p.y, t);
+    const nx = p.x + Math.cos(a) * CONFIG.speed * DPR;
+    const ny = p.y + Math.sin(a) * CONFIG.speed * DPR;
+    const hue = CONFIG.hueBase + Math.sin(p.x * 0.002 + p.y * 0.002) * CONFIG.hueRange;
+
+    // 1) resplandor: ancho y tenue
+    ctx.lineWidth = CONFIG.glow * DPR;
+    ctx.strokeStyle = `hsla(${hue}, 100%, 55%, 0.10)`;
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y); ctx.lineTo(nx, ny); ctx.stroke();
+
+    // 2) núcleo: fino y brillante
+    ctx.lineWidth = CONFIG.core * DPR;
+    ctx.strokeStyle = `hsla(${hue}, 100%, 72%, 0.65)`;
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y); ctx.lineTo(nx, ny); ctx.stroke();
+
+    p.x = nx; p.y = ny;
+    p.life--;
+    if (p.life < 0 || p.x < 0 || p.x > W || p.y < 0 || p.y > H) {
+      p.x = Math.random() * W; p.y = Math.random() * H;
+      p.life = 100 + Math.random() * 200;
+    }
+  }
+  requestAnimationFrame(frame);
+}
+frame();
+</script>
+</body>
+</html>
